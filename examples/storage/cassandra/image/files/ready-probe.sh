@@ -14,14 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+DEBUG=0
+
 if [[ $(nodetool status | grep $POD_IP) == *"UN"* ]]; then
   if [[ $DEBUG ]]; then
-    echo "Not Up";
+    echo "UN";
   fi
-  exit 0;
+
+  /usr/bin/cassandra-kubernetes-hostid --populate --namespace $POD_NAMESPACE --pod $POD_NAME
+
+  exit $?;
 else
   if [[ $DEBUG ]]; then
-    echo "UN";
+    echo "Not Up";
   fi
   exit 1;
 fi

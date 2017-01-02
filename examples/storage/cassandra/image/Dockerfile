@@ -33,7 +33,7 @@ RUN mv /java.list /etc/apt/sources.list.d/java.list \
   && gpg --keyserver pool.sks-keyservers.net --recv-keys A278B781FE4B2BDA \
   && gpg --export --armor A278B781FE4B2BDA | apt-key add - \
   && apt-get update \
-  && apt-get -qq -y --force-yes install --no-install-recommends curl cassandra localepurge \
+  && apt-get -qq -y --force-yes install --no-install-recommends cassandra \
   && chmod a+rx /run.sh /sbin/dumb-init /ready-probe.sh \
   && mkdir -p /cassandra_data/data \
   && mv /logback.xml /cassandra.yaml /jvm.options /etc/cassandra/ \
@@ -42,7 +42,10 @@ RUN mv /java.list /etc/apt/sources.list.d/java.list \
   # && chown -R cassandra: /etc/cassandra /cassandra_data /run.sh /kubernetes-cassandra.jar \
   # && chmod o+w -R /etc/cassandra /cassandra_data \
 
+  && curl -L https://github.com/mstump/cassandra-kubernetes-hostid/releases/download/v0.2/cassandra-kubernetes-hostid -o /usr/bin/cassandra-kubernetes-hostid \
+  && chmod +x /usr/bin/cassandra-kubernetes-hostid \
   && apt-get -y purge curl localepurge \
+  && apt-get -y autoremove \
   && apt-get clean \
   && rm -rf \
         doc \
